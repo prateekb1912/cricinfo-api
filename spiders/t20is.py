@@ -3,6 +3,7 @@
     all the T20I match results
 """
 import scrapy
+import pandas as pd
 
 class T20ISpider(scrapy.Spider):
     name = "t20i"
@@ -22,6 +23,10 @@ class T20ISpider(scrapy.Spider):
             The data is stored in a table with each result in a different row
         """
         table = response.xpath("//table")[0]
+
+        # Get header row for column names
+        header = table.xpath("//th/text()").getall()
+
         data_rows = table.xpath("//tr[@class='data1']")
 
         # Now we will store all the data as a Pandas Dataframe
@@ -29,11 +34,12 @@ class T20ISpider(scrapy.Spider):
 
         for row in data_rows:
             data = row.xpath("td//text()").getall()
-            team1, team2, winner, margin, venue, date, t20INo  = data
 
-            t20INo = int(t20INo[7:])
+            t20Is = pd.DataFrame(data, columns=header)
 
-            
+            print(t20Is.head())
+
+
 
 
 
