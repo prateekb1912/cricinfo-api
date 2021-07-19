@@ -17,3 +17,9 @@ class T20ISpider(scrapy.Spider):
         for url in urls:
             yield scrapy.Request(url, callback=self.parse)
     
+    def parse(self, response):
+        """
+            The data is stored in a table with each result in a different row
+        """
+        table = response.xpath("//table")[0]
+        data_rows = table.xpath("//tr[@class='data1']")
