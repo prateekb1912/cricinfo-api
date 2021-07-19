@@ -12,5 +12,5 @@ class CricinfoCrawlerItem(scrapy.Item):
     winner = scrapy.Field()
     margin = scrapy.Field()
     venue = scrapy.Field()
-    date = scrapy.Field()
-    matchNo = scrapy.Field()
+    match_date = scrapy.Field()
+    match_no = scrapy.Field()
