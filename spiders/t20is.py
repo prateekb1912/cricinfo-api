@@ -23,3 +23,20 @@ class T20ISpider(scrapy.Spider):
         """
         table = response.xpath("//table")[0]
         data_rows = table.xpath("//tr[@class='data1']")
+
+        # Now we will store all the data as a Pandas Dataframe
+        # and save it into a csv
+
+        for row in data_rows:
+            data = row.xpath("td//text()").getall()
+            team1, team2, winner, margin, venue, date, t20INo  = data
+
+            t20INo = int(t20INo[7:])
+
+            
+
+
+
+
+
+
