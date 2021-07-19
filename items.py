@@ -7,6 +7,10 @@ import scrapy
 
 
 class CricinfoCrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    team1 = scrapy.Field()
+    team2 = scrapy.Field()
+    winner = scrapy.Field()
+    margin = scrapy.Field()
+    venue = scrapy.Field()
+    date = scrapy.Field()
+    matchNo = scrapy.Field()
