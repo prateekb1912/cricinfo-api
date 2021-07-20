@@ -4,7 +4,7 @@
 """
 import scrapy
 import pandas as pd
-from ..items import CricinfoCrawlerItem
+from ..items import T20IResultsItem
 
 class T20ISpider(scrapy.Spider):
     name = "t20i"
@@ -21,7 +21,7 @@ class T20ISpider(scrapy.Spider):
     
     def parse(self, response):
 
-        items = CricinfoCrawlerItem()
+        items = T20IResultsItem()
 
         table = response.xpath("//table")[0]
         

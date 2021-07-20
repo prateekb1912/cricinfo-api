@@ -6,7 +6,7 @@
 import scrapy
 
 
-class CricinfoCrawlerItem(scrapy.Item):
+class T20IResultsItem(scrapy.Item):
     team1 = scrapy.Field()
     team2 = scrapy.Field()
     winner = scrapy.Field()
@@ -14,3 +14,6 @@ class CricinfoCrawlerItem(scrapy.Item):
     venue = scrapy.Field()
     match_date = scrapy.Field()
     match_no = scrapy.Field()
+
+class PlayersItem(scrapy.Item):
+    name = scrapy.Field()
