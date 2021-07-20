@@ -5,28 +5,35 @@
 import scrapy
 from scrapy.selector import Selector
 from ..items import TeamRosterInfoItem
-from scrapy_selenium import SeleniumRequest
 from selenium import webdriver
-
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class PlayersSpider(scrapy.Spider):
     name = 'players_spider'
 
-    start_urls = ['https://www.espncricinfo.com/player/team/australia-2']
+    start_urls = ["https://www.espncricinfo.com/player/team/australia-"+str(id)
+                  for id in range(4)]
 
     def __init__(self):
-        driver = webdriver.Chrome(executable_path='/home/patrick/Downloads/chromedriver')
+        self.driver = webdriver.Chrome(
+            executable_path='/home/patrick/Downloads/chromedriver')
 
-        driver.get('https://www.espncricinfo.com/player/team/australia-2')
+        self.driver.implicitly_wait(10)
+        self.wait = WebDriverWait(self.driver, 10)
 
-        # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        self.html = driver.page_source
-
-        driver.close()
 
     def parse(self, response):
-        response = Selector(text = self.html)
+
+        self.logger.debug(response.url)
+
+        self.driver.get(response.url)
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div.player-index-container")))
+
+        self.html = self.driver.page_source
+
+        response = Selector(text=self.html)
         teamRoster = TeamRosterInfoItem()
         container = response.css("div.player-index-container")
 
@@ -35,10 +42,11 @@ class PlayersSpider(scrapy.Spider):
 
         if len(players_grid) > 0:
             team = container.css("h2::text").get()
-            team = team.replace(" Players", "") 
+            team = team.replace(" Players", "")
 
             players = players_grid.css("div.index-data")
 
             teamRoster['team'] = team
             teamRoster['team_size'] = len(players)
             yield teamRoster
+        self.driver.close()
