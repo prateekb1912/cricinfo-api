@@ -3,32 +3,42 @@
     countries with available info in the database
 """
 import scrapy
+from scrapy.selector import Selector
 from ..items import TeamRosterInfoItem
+from scrapy_selenium import SeleniumRequest
+from selenium import webdriver
+
 
 class PlayersSpider(scrapy.Spider):
     name = 'players_spider'
 
-    def start_requests(self):
-        for i in range(1,10):
-            url = f"https://hs-consumer-api.espncricinfo.com/v1/pages/player/search?mode=BOTH&filterTeamId={i}&filterFormatLevel=INTERNATIONAL"
-        
-            yield scrapy.Request(url, callback=self.parse)
+    start_urls = ['https://www.espncricinfo.com/player/team/australia-2']
+
+    def __init__(self):
+        driver = webdriver.Chrome(executable_path='/home/patrick/Downloads/chromedriver')
+
+        driver.get('https://www.espncricinfo.com/player/team/australia-2')
+
+        # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        self.html = driver.page_source
+
+        driver.close()
 
     def parse(self, response):
-        if response.status == 200:
-            teamRoster = TeamRosterInfoItem()
+        response = Selector(text = self.html)
+        teamRoster = TeamRosterInfoItem()
+        container = response.css("div.player-index-container")
 
-            container = response.css("div.player-index-container")
+        # Checking if players info are available for the team
+        players_grid = container.css("div.player-index-grid")
 
-            # Checking if players info are available for the team
-            players_grid = container.css("div.player-index-grid")
+        if len(players_grid) > 0:
+            team = container.css("h2::text").get()
+            team = team.replace(" Players", "") 
 
-            if len(players_grid) > 0:
-                team = container.css("h2::text").get()
-                team = team.replace(" Players", "") 
+            players = players_grid.css("div.index-data")
 
-                players = players_grid.css("div.index-data")
-
-                teamRoster['team'] = team
-                teamRoster['team_size'] = len(players)
-                yield teamRoster
+            teamRoster['team'] = team
+            teamRoster['team_size'] = len(players)
+            yield teamRoster
