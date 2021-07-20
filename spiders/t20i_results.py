@@ -3,7 +3,6 @@
     all the T20I match results
 """
 import scrapy
-import pandas as pd
 from ..items import T20IResultsItem
 
 class T20ISpider(scrapy.Spider):
@@ -29,10 +28,6 @@ class T20ISpider(scrapy.Spider):
         header = ['team1', 'team2', 'winner', 'margin', 'venue', 'match_date', 'match_no']
 
         data_rows = table.xpath("//tr[@class='data1']")
-
-        # Now we will store all the data as a Pandas Dataframe
-        # and save it into a csv
-        results = pd.DataFrame(columns = header)
 
         for row in data_rows:
             data = row.xpath("td//text()").getall()
