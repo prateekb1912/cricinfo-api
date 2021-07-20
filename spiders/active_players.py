@@ -21,3 +21,6 @@ class PlayersSpider(scrapy.Spider):
 
             if len(players_grid > 0):
                team = container.css("h2::text").get()
+               team = team.replace(" Players", "")
+
+               
