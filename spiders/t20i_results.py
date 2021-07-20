@@ -20,14 +20,12 @@ class T20ISpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse)
     
     def parse(self, response):
-        """
-            The data is stored in a table with each result in a different row
-        """
 
         items = CricinfoCrawlerItem()
 
         table = response.xpath("//table")[0]
         
+        # The data is stored in a table with each result in a different row
         header = ['team1', 'team2', 'winner', 'margin', 'venue', 'match_date', 'match_no']
 
         data_rows = table.xpath("//tr[@class='data1']")
