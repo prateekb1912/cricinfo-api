@@ -14,7 +14,7 @@ class T20ISpider(scrapy.Spider):
 
         # URLS for all T20I results from 2005 to 2020 
         for year in range(2005, 2021):
-            urls.append(f"https://stats.espncricinfo.com/ci/engine/records/team/match_results.html?class=3;id={str(year)};type=year")
+            urls.append(f"https://stats.espncricinfo.com/ci/engine/records/team/match_results.html?class=3;id={year};type=year")
         
         for url in urls:
             yield scrapy.Request(url, callback=self.parse)
@@ -42,9 +42,3 @@ class T20ISpider(scrapy.Spider):
             items = dict(zip(header, data))
 
             yield items
-
-
-
-
-
-

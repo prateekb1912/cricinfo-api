@@ -10,4 +10,5 @@ from itemadapter import ItemAdapter
 
 class CricinfoCrawlerPipeline:
     def process_item(self, item, spider):
+        print(f"Pipeline: {item['winner']}")
         return item
