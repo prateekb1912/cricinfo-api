@@ -9,9 +9,8 @@ class PlayersSpider(scrapy.Spider):
     name = 'players_spider'
 
     def start_requests(self):
-        for i in range(1, 2):
-
-            url = f"https://www.espncricinfo.com/ci/content/player/country.html?country={i}"
+        for i in range(1,10):
+            url = f"https://hs-consumer-api.espncricinfo.com/v1/pages/player/search?mode=BOTH&filterTeamId={i}&filterFormatLevel=INTERNATIONAL"
         
             yield scrapy.Request(url, callback=self.parse)
 
