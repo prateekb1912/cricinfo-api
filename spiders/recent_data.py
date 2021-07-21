@@ -15,4 +15,9 @@ class LiveScores(scrapy.Spider):
     def pase(self, response):
         js = json.loads(response.body)
 
-        js.to_json()
+        matches = js['matches']
+
+        live_data = pd.json_normalize(matches)
+        live_data.to_csv("latest-scores.csv")
+        
+
