@@ -5,19 +5,23 @@
 
 import scrapy
 import json
-import pandas as pd
+from ..items import MatchResultItem
 
 class LiveScores(scrapy.Spider):
     name = "live_spider"
 
     start_urls = ['https://hs-consumer-api.espncricinfo.com/v1/pages/matches/current?latest=true']
 
-    def pase(self, response):
-        js = json.loads(response.body)
+    def parse(self, response):
 
+        match_details = MatchResultItem()
+
+        js = json.loads(response.body)
         matches = js['matches']
 
-        live_data = pd.json_normalize(matches)
-        live_data.to_csv("latest-scores.csv")
+        # Extract useful information from data 
+        match_details['match_id'] = matches
+
+        yield matches
         
 
