@@ -19,9 +19,16 @@ class LiveScores(scrapy.Spider):
         js = json.loads(response.body)
         matches = js['matches']
 
-        # Extract useful information from data 
-        match_details['match_id'] = matches
+        for match in matches:
 
-        yield matches
+            # Extract useful information from data 
+            match_details['id'] = match['objectId']
+
+            match_details['info'] = match['slug'].replace('-', ' ')
+            
+            match_details['state'] = match['stage']
+            match_details['status'] = match['statusText']
+
+            yield match_details
         
 

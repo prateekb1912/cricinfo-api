@@ -23,7 +23,7 @@ class PlayersItem(scrapy.Item):
     name = scrapy.Field()
 
 class MatchResultItem(scrapy.Item):
-    match_id = scrapy.Field()
-    match_details = scrapy.Field()
-    match_state = scrapy.Field()
-    match_status = scrapy.Field()
+    id = scrapy.Field()
+    info = scrapy.Field()
+    state = scrapy.Field()
+    status = scrapy.Field()
