@@ -3,6 +3,7 @@
     countries with available info in the database
 """
 import scrapy
+import time
 from scrapy.selector import Selector
 from ..items import TeamRosterInfoItem
 from selenium import webdriver
@@ -20,16 +21,18 @@ class PlayersSpider(scrapy.Spider):
         self.driver = webdriver.Chrome(
             executable_path='/home/patrick/Downloads/chromedriver')
 
-        self.driver.implicitly_wait(10)
+        # self.driver.implicitly_wait(10)
         self.wait = WebDriverWait(self.driver, 10)
 
 
     def parse(self, response):
 
         self.logger.debug(response.url)
-
         self.driver.get(response.url)
-        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div.player-index-container")))
+        
+        # time.sleep(10)
+
+        #self.wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.solid-loader")))
 
         self.html = self.driver.page_source
 
