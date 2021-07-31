@@ -4,7 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-
+from dataclasses import dataclass
 
 class T20IResultsItem(scrapy.Item):
     team1 = scrapy.Field()
@@ -14,10 +14,6 @@ class T20IResultsItem(scrapy.Item):
     venue = scrapy.Field()
     match_date = scrapy.Field()
     match_no = scrapy.Field()
-
-class TeamRosterInfoItem(scrapy.Item):
-    team_name = scrapy.Field()
-    team_size = scrapy.Field()
 
 class PlayersItem(scrapy.Item):
     player_id = scrapy.Field()
@@ -30,3 +26,10 @@ class MatchResultItem(scrapy.Item):
     info = scrapy.Field()
     state = scrapy.Field()
     status = scrapy.Field()
+
+
+@dataclass
+class PopularTeamsItem:
+    team_id: int
+    team_name: str
+    team_color: str
