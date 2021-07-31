@@ -6,7 +6,7 @@ import scrapy
 from ..items import T20IResultsItem
 
 class T20ISpider(scrapy.Spider):
-    name = "t20i"
+    name = "t20i_spider"
 
     def start_requests(self):
         urls = []

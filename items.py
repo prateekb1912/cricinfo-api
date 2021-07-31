@@ -16,11 +16,14 @@ class T20IResultsItem(scrapy.Item):
     match_no = scrapy.Field()
 
 class TeamRosterInfoItem(scrapy.Item):
-    team = scrapy.Field()
+    team_name = scrapy.Field()
     team_size = scrapy.Field()
 
 class PlayersItem(scrapy.Item):
-    name = scrapy.Field()
+    player_id = scrapy.Field()
+    full_name = scrapy.Field()
+    gender = scrapy.Field()
+    role = scrapy.Field()
 
 class MatchResultItem(scrapy.Item):
     id = scrapy.Field()
