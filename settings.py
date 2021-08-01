@@ -7,7 +7,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from cricinfo_crawler.pipelines import TeamsCrawlerPipeline
+from cricinfo_crawler.pipelines import CricinfoCrawlerPipeline
 
 
 BOT_NAME = 'cricinfo_crawler'
@@ -67,7 +67,7 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 ITEM_PIPELINES = {
-   'cricinfo_crawler.pipelines.TeamsCrawlerPipeline': 100
+   'cricinfo_crawler.pipelines.CricinfoCrawlerPipeline': 100
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
