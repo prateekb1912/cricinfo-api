@@ -7,6 +7,9 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from cricinfo_crawler.pipelines import TeamsCrawlerPipeline
+
+
 BOT_NAME = 'cricinfo_crawler'
 
 SPIDER_MODULES = ['cricinfo_crawler.spiders']
@@ -64,7 +67,7 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 ITEM_PIPELINES = {
-   'cricinfo_crawler.pipelines.CricinfoCrawlerPipeline': 300,
+   'cricinfo_crawler.pipelines.TeamsCrawlerPipeline': 100
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -87,15 +90,3 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-
-
-# Integrate selenium in the project to scrape javascript-enabled websites
-from shutil import which
-  
-SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
-SELENIUM_DRIVER_ARGUMENTS=['--headless']  
-  
-DOWNLOADER_MIDDLEWARES = {
-     'scrapy_selenium.SeleniumMiddleware': 800
-     }
