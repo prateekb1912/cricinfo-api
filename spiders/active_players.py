@@ -4,24 +4,22 @@
 """
 import scrapy
 import json
+import re
 from ..items import PlayersItem
 
 class PlayersSpider(scrapy.Spider):
     name = "players_spider"
     
     def __init__(self, team_id = 1):
-        self.base_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/player/search"
-        "?mode=BOTH&records=10"
-        "&filterFormatLevel=INTERNATIONAL&filterActive=true&page=1"
-
-        self.curr_url = self.base_url + "&filterTeamId = %d"%team_id
-
+        self.base_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/player/search?mode=BOTH&records=10&filterFormatLevel=INTERNATIONAL&filterActive=true"
+        self.curr_url = self.base_url + "&filterTeamId=%d&page=%d"%(team_id, 1)
         self.start_urls = [self.curr_url]
 
     def parse(self, response):
         details = json.loads(response.body)
 
-        print(self.curr_url.split('&'))
+        pageNo = int(re.findall(r'\d+',self.curr_url.split('&')[-1])[0])
+        self.curr_url = self.curr_url.replace("page=%s"%pageNo, "page=%d"%(pageNo+1))
 
         playersItem = PlayersItem() 
 
@@ -33,4 +31,4 @@ class PlayersSpider(scrapy.Spider):
                 playersItem['role'] = player['playingRole']
 
                 yield playersItem
-            yield scrapy.Request(self.curr_url + "&page=%d"%i, callback=self.parse)
+            yield scrapy.Request(self.curr_url, callback=self.parse)

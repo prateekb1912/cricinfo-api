@@ -9,4 +9,4 @@ from itemadapter import ItemAdapter
 
 class TeamsCrawlerPipeline:
     def process_item(self, item, spider):
-        pass
+        return item
