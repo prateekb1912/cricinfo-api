@@ -6,11 +6,12 @@
 
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
-import pandas as pd
 import os
+from crawler.py import PlayersCrawler
 
-class CricinfoCrawlerPipeline:
+class CricinfoCrawlerPipeline:   
     def open_spider(self, spider):
+        self.teams = {}
         if spider.name == 'teams_spider':
             if not (os.path.exists('teams')):
                 os.mkdir(os.path.join(os.getcwd(),'teams'))
@@ -18,11 +19,14 @@ class CricinfoCrawlerPipeline:
     def process_item(self, item, spider):
         if spider.name == 'teams_spider':
             teamInfo = ItemAdapter(item)['team']
-            fileName = teamInfo['team_name'].lower()+'-'+str(teamInfo['team_id'])+'.csv'
-            if not (os.path.exists('teams/'+fileName)):
-                self.file = open(os.path.join("teams", fileName), 'w')
+
+            self.tems[teamInfo['team_id']] = teamInfo['team_name']
+
+            fileName = teamInfo['team_name'].lower()+'.csv'
+            self.file = open(os.path.join("teams", fileName), 'w')
         
         return item
     
     def close_spider(self, spider):
         self.file.close()
+        PlayersCrawler(self.teams)

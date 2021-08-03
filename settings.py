@@ -7,8 +7,6 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from cricinfo_crawler.pipelines import CricinfoCrawlerPipeline
-
 
 BOT_NAME = 'cricinfo_crawler'
 

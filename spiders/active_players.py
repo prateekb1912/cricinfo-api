@@ -10,7 +10,10 @@ from ..items import PlayersItem
 class PlayersSpider(scrapy.Spider):
     name = "players_spider"
     
-    def __init__(self, team_id = 1):
+    def __init__(self, team_id = 1, team_name = "England"):
+        self.team_id = team_id
+        self.team_name = team_name
+
         self.base_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/player/search?mode=BOTH&records=10&filterFormatLevel=INTERNATIONAL&filterActive=true"
         self.curr_url = self.base_url + "&filterTeamId=%d&page=%d"%(team_id, 1)
         self.start_urls = [self.curr_url]
@@ -29,6 +32,7 @@ class PlayersSpider(scrapy.Spider):
                 playersItem['full_name'] = (player['longName'])
                 playersItem['gender'] = player['gender']
                 playersItem['role'] = player['playingRole']
+                playersItem['team'] = self.team_name
 
                 yield playersItem
             yield scrapy.Request(self.curr_url, callback=self.parse)

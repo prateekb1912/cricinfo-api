@@ -1,14 +1,18 @@
-from scrapy import spiders
+from typing import Dict
 from scrapy.utils.project import get_project_settings
 from scrapy.crawler import CrawlerProcess
 
 setting = get_project_settings()
 process = CrawlerProcess(setting)
 
-#spiders = process.spiders.list()
+class PlayersCrawler(team_info = Dict()):
+    def __init__(self):
+        self.spider = 'players_spider'
 
-teams_spider = 'teams_spider'
-players_spider = 'players_spider'
+        for info in team_info:
+            print(info)
+
+
 
 # teams = process.crawl(teams_spider)
 
