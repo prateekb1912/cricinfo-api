@@ -18,6 +18,7 @@ class T20IResultsItem(scrapy.Item):
 class PlayersItem(scrapy.Item):
     player_id = scrapy.Field()
     full_name = scrapy.Field()
+    team = scrapy.Field()
     gender = scrapy.Field()
     role = scrapy.Field()
 
