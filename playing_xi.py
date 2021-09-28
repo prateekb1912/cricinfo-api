@@ -26,6 +26,9 @@ response = requests.get(url, headers=headers)
 
 data = response.json()
 
+matchDate = data['match']['startDate']
+print(matchDate)
+
 # Getting to the level where both teams' players are recorded 
 players = data['content']['matchPlayers']['teamPlayers']
 
@@ -40,4 +43,33 @@ team2_id = team2['team']['objectId']
 team2_name = team2['team']['longName']
 
 
-# Retrieve relevant details for each player like palying role, 
+# Store all the player details in the empty lists
+team1_players = [] 
+team2_players = []
+
+position = 1
+for player in team2['players']:
+    # Retrieve relevant details for each player like palying role, is captain/wicket-keeper, 
+    # batting and bowling styles, nationality (for T20 leagues)
+
+    curr_plyr_details = dict()
+
+    curr_plyr_details['position'] = position
+    
+    position += 1
+
+    curr_plyr_details['role_type'] = player['playerRoleType']
+    
+    player = player['player']
+    
+    curr_plyr_details['name'] = player['name']
+    curr_plyr_details['playing_role'] = player['playingRole']
+    curr_plyr_details['batting_style'] = player['battingStyles'][0]
+    if len(player['bowlingStyles']):
+        curr_plyr_details['bowling_style'] = player['bowlingStyles'][0]
+    else:
+        curr_plyr_details['bowling_style'] = None
+
+    team1_players.append(curr_plyr_details)
+
+print(team1_players)
