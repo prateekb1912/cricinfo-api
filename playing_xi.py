@@ -6,7 +6,8 @@ import requests
 import pandas as pd
 
 # We will use the 1st ever CPL match to begin our data extraction
-url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/team-players?lang=en&seriesId=604578&matchId=635215"
+url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/team-players?"\
+    "&seriesId=1249214&matchId=1254099"
 
 headers = {
   'authority': 'hs-consumer-api.espncricinfo.com',
@@ -76,6 +77,8 @@ for team in teams:
         else:
             curr_plyr_details['bowling_style'] = None
 
+        curr_plyr_details['country_id'] = player['countryTeamId']
+
         temp_list.append(curr_plyr_details)
 
     i += 1
@@ -89,4 +92,5 @@ team1 = pd.DataFrame(teams_plyr_list[0])
 team2 = pd.DataFrame(teams_plyr_list[1])
 
 playing_xi_data = pd.concat([team1, team2], axis=0, ignore_index=True)
+
 print(playing_xi_data)
