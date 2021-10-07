@@ -1,14 +1,13 @@
 """
-    In this script, we will be extracting the ball-by-ball and over-by-over data for
-    a match
+    In this script, we will be extracting the scorecard of a match
 """
 
 import requests
 import pandas as pd
 
-# We will use the 1st ever CPL match to begin our data extraction
-url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/overs?"\
-    "seriesId=604578&matchId=635215"
+# We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
+url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
+    "?seriesId=1249214&matchId=1254095"
 
 headers = {
   'authority': 'hs-consumer-api.espncricinfo.com',
@@ -29,7 +28,3 @@ data = response.json()
 
 match_id = data['match']['objectId']
 
-innings = data['content']['inningOvers']
-
-for inn in innings:
-    stats = inn['stats']
