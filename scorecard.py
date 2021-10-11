@@ -7,7 +7,7 @@ import pandas as pd
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
 url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
-    "?seriesId=1249214&matchId=1254095"
+    "?seriesId=1249214&matchId=1254093"
 
 headers = {
   'authority': 'hs-consumer-api.espncricinfo.com',
@@ -28,3 +28,30 @@ data = response.json()
 
 match_id = data['match']['objectId']
 
+scorecard = data['content']['scorecard']
+
+innings = scorecard['innings']
+
+for inn in innings:
+    inn_num = inn['inningNumber']
+    balls_faced = inn['balls']
+    total_score = inn['runs']
+
+    batsmen = inn['inningBatsmen']
+
+    for bats in batsmen:
+        batter = bats['player']['battingName']
+        batter_id = bats['player']['objectId']
+        balls_faced = bats['balls']
+        runs = bats['runs']
+        fours = bats['fours']
+        sixes = bats['sixes']
+        sr = bats['strikerate']
+        mins = bats['minutes']
+        dismissal_type = bats['dismissalText']['short']
+
+
+
+
+
+        
