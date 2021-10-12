@@ -4,7 +4,7 @@
 
 import requests
 import sqlite3
-from utils import headers
+from utils import *
 
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
@@ -12,7 +12,7 @@ url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
     "?seriesId=1249214&matchId=1254114"
 
 # Create a connection to the database and a cursor object
-conn = sqlite3.connect('scorecard.db')
+conn = create_connection('scorecard.db')
 c = conn.cursor()
 
 c.execute("""CREATE TABLE IF NOT EXISTS batters(

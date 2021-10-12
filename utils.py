@@ -1,3 +1,7 @@
+from sqlite3 import Error
+import sqlite3
+
+# The headers used while accessing the ESPNCricinfo website for our data.
 headers = {
   'authority': 'hs-consumer-api.espncricinfo.com',
   'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.115 Safari/537.36',
@@ -10,3 +14,18 @@ headers = {
   'referer': 'https://www.espncricinfo.com/',
   'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'
 }
+
+def create_connection(db_file):
+    """ Create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+
+    return conn
