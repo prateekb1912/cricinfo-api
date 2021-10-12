@@ -29,3 +29,7 @@ def create_connection(db_file):
         print(e)
 
     return conn
+
+
+# The tournament IDs for several T20 leagues used by Cricinfo which
+# we will use to scrape data for the specific tournament season.
