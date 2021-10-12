@@ -3,11 +3,22 @@
 """
 
 import requests
-import pandas as pd
+import sqlite3
+
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
 url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
     "?seriesId=1249214&matchId=1254114"
+
+# Create a connection to the database and a cursor object
+conn = sqlite3.connect('scorecard.db')
+c = conn.cursor()
+
+c.execute("""CREATE TABLE IF NOT EXISTS batters(
+    player_id INT PRIMARY KEY,
+    batter TEXT,
+    runs INTEGER,
+    balls INTEGER);""")
 
 headers = {
   'authority': 'hs-consumer-api.espncricinfo.com',
@@ -66,10 +77,16 @@ for inn in innings:
             'dismissal_type': dismissal_type
         })
 
-    for det in batter_details:
-        print(det)
+    # for det in batter_details:
+    #     c.execute('''INSERT INTO batters VALUES(?,?,?,?)''', 
+    #     (det['player_id'], det['batter'], det['runs'], det['balls']))
 
-    
+
+c.execute('''SELECT batter FROM batters WHERE runs>10''')
+results = c.fetchall()
+print(results)
+
+conn.commit()    
 
 
 
