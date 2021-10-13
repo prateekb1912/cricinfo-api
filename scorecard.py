@@ -14,19 +14,34 @@ url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
 conn = create_connection('scorecard.db')
 c = conn.cursor()
 
-c.execute("""CREATE TABLE IF NOT EXISTS batters(
+c.execute("""CREATE TABLE IF NOT EXISTS batters (
     player_id INT PRIMARY KEY,
     batter TEXT,
     runs INTEGER,
-    balls INTEGER);""")
+    balls INTEGER,
+    UNIQUE(player_id, batter, runs, balls) ON CONFLICT IGNORE);""")
 
+c.execute("""
+    CREATE TABLE IF NOT EXISTS match_details (
+        series_id INT,
+        season TEXT,
+        match_id INT PRIMARY KEY,
+        date TEXT,
+        time TEXT,
+        team1_id INT,
+        team2_id INT,
+        toss_winner INT,        
+        toss_decision TEXT,
+        winner INT,
+        result TEXT,
+        player_of_match TEXT,
+    );
+""")
 
 
 response = requests.get(url, headers=headers)
 
 data = response.json()
-
-match_id = data['match']['objectId']
 
 scorecard = data['content']['scorecard']
 
