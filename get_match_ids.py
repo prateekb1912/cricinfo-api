@@ -9,10 +9,11 @@ import re
 # We will start with scraping only the franchisee-based T20 leagues and build on it.
 
 header = "https://stats.espncricinfo.com/"
+
+
 addon = "ci/engine/records/index.html"
 
 page = requests.get(header+addon)
-
 soup = BeautifulSoup(page.content, 'html.parser')
 
 # Finding the specific list with all T20 league titles and IDs 
@@ -21,6 +22,8 @@ leagues_links = [{link.text:int(re.findall("[0-9]+",link['href'])[0])} for link 
 
 for ll in leagues_links:
     league_name = list(ll.keys())[0]
+    if league_name == 'ICC Intercontinental Cup':
+        continue
     league_id = list(ll.values())[0]
     
     results_link = header+f"ci/engine/records/team/match_results_season.html?id={league_id};type=trophy"
@@ -34,8 +37,9 @@ for ll in leagues_links:
 
     num_seasons = len(season_links)
 
-    for s in season_links:
+    seas_matches = []
 
+    for s in season_links:
         season_page = requests.get(header+s)
         soup = BeautifulSoup(season_page.content, 'html.parser')
 
@@ -45,4 +49,6 @@ for ll in leagues_links:
         matchIDs = [int(re.findall("[0-9]+", link['href'])[0]) for link in matchLinks]
 
         num_matches = len(matchIDs)
-        print(num_matches)
+        seas_matches.append(num_matches)
+    
+    print(seas_matches)
