@@ -5,16 +5,39 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import sqlite3
+from utils import *
 
 # We will start with scraping only the franchisee-based T20 leagues and build on it.
 
 header = "https://stats.espncricinfo.com/"
 
-
 addon = "ci/engine/records/index.html"
 
 page = requests.get(header+addon)
 soup = BeautifulSoup(page.content, 'html.parser')
+
+conn = create_connection('leagues.db')
+c = conn.cursor()
+
+# Creating a table with league detaisl like title, ID, number of seasons
+c.execute("""
+    CREATE TABLE IF NOT EXISTS leagues(
+        id INT PRIMARY KEY,
+        title TEXT,
+        seasons INT
+    );
+""")
+
+# Creating another table with all matches info for the leagues scraped
+c.execute("""
+    CREATE TABLE IF NOT EXISTS matches(
+        league_id INT,
+        match_id INT PRIMARY KEY,
+        FOREIGN KEY (league_id)
+            REFERENCES leagues(id)
+    );
+""")
 
 # Finding the specific list with all T20 league titles and IDs 
 leagues_list = soup.find_all('ul', attrs={'class': 'Record'})[11]
@@ -37,8 +60,6 @@ for ll in leagues_links:
 
     num_seasons = len(season_links)
 
-    seas_matches = []
-
     for s in season_links:
         season_page = requests.get(header+s)
         soup = BeautifulSoup(season_page.content, 'html.parser')
@@ -48,7 +69,12 @@ for ll in leagues_links:
 
         matchIDs = [int(re.findall("[0-9]+", link['href'])[0]) for link in matchLinks]
 
-        num_matches = len(matchIDs)
-        seas_matches.append(num_matches)
+        for id in matchIDs:
+            c.execute("""
+                INSERT INTO matches VALUES (?,?)""", (league_id, id))
+
     
-    print(seas_matches)
+    c.execute("""
+        INSERT INTO leagues VALUES (?,?,?)""", (league_id, league_name, num_seasons))
+    
+conn.commit()
