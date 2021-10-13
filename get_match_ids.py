@@ -19,18 +19,30 @@ soup = BeautifulSoup(page.content, 'html.parser')
 leagues_list = soup.find_all('ul', attrs={'class': 'Record'})[11]
 leagues_links = [{link.text:int(re.findall("[0-9]+",link['href'])[0])} for link in leagues_list.find_all('a')]
 
-results_links = [header+f"ci/engine/records/team/match_results_season.html?id={list(id.values())[0]};type=trophy" for id in leagues_links]
+for ll in leagues_links:
+    league_name = list(ll.keys())[0]
+    league_id = list(ll.values())[0]
+    
+    results_link = header+f"ci/engine/records/team/match_results_season.html?id={league_id};type=trophy"
+    
+    res_page = requests.get(results_link)
+    soup = BeautifulSoup(res_page.content, 'html.parser')
+    
+    recTable = soup.find('table', attrs={'class':'recordsTable'})
+    
+    season_links = [link['href'] for link in recTable.find_all('a')]
 
-res_page = requests.get(results_links[6])
-soup = BeautifulSoup(res_page.content, 'html.parser')
+    num_seasons = len(season_links)
 
-recTable = soup.find('table', attrs={'class':'recordsTable'})
-season_links = [link['href'] for link in recTable.find_all('a')]
+    for s in season_links:
 
-season_pages = requests.get(header+season_links[0])
-soup = BeautifulSoup(season_pages.content, 'html.parser')
+        season_page = requests.get(header+s)
+        soup = BeautifulSoup(season_page.content, 'html.parser')
 
-matchTable = soup.find('table', attrs = {'class': 'engineTable'})
-matchIDs = [int(re.findall("[0-9]+", link['href'])[0]) for link in matchTable.find_all('a', string = 'T20')]
+        matchTable = soup.find('table', attrs = {'class': 'engineTable'})
+        matchLinks = matchTable.find_all('a', string = 'T20')
 
-print(matchIDs)
+        matchIDs = [int(re.findall("[0-9]+", link['href'])[0]) for link in matchLinks]
+
+        num_matches = len(matchIDs)
+        print(num_matches)
