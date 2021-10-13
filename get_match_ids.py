@@ -31,6 +31,6 @@ season_pages = requests.get(header+season_links[0])
 soup = BeautifulSoup(season_pages.content, 'html.parser')
 
 matchTable = soup.find('table', attrs = {'class': 'engineTable'})
-matchLinks = [link['href'] for link in matchTable.findAll('a', text = re.compile('T20'))]
+matchIDs = [int(re.findall("[0-9]+", link['href'])[0]) for link in matchTable.find_all('a', string = 'T20')]
 
-print(len(matchLinks))
+print(matchIDs)
