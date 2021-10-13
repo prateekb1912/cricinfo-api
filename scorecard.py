@@ -3,7 +3,6 @@
 """
 
 import requests
-import sqlite3
 from utils import *
 
 
@@ -35,8 +34,7 @@ innings = scorecard['innings']
 
 for inn in innings:
     inn_num = inn['inningNumber']
-    balls_faced = inn['balls']
-    total_score = inn['runs']
+    team_id = inn['team']['objectId']
 
     batter_details = []
     batsmen = inn['inningBatsmen']
@@ -56,6 +54,8 @@ for inn in innings:
             break
 
         batter_details.append({
+            'inning': inn_num,
+            'team_id': team_id,
             'player_id': batter_id,
             'batter': batter,
             'runs': runs,

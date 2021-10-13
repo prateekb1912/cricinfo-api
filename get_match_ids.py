@@ -5,7 +5,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import sqlite3
 from utils import *
 
 # We will start with scraping only the franchisee-based T20 leagues and build on it.
