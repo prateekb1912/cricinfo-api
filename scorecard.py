@@ -6,7 +6,7 @@ import requests
 from utils import *
 from datetime import datetime
 
-series_id = 
+series_id = 313494
 
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes

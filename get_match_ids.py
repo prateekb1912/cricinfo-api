@@ -19,7 +19,10 @@ soup = BeautifulSoup(page.content, 'html.parser')
 conn = create_connection('leagues.db')
 c = conn.cursor()
 
-# Creating a table with league detaisl like title, ID, number of seasons
+# Creating a table with league details 
+# season_id - a unique ID for each season of the leagues
+# league_title -  the name of the league which will have multiple seasons
+# season - the season number of the league with the unique ID
 c.execute("""
     CREATE TABLE IF NOT EXISTS leagues(
         season_id INT PRIMARY KEY,
@@ -28,7 +31,7 @@ c.execute("""
     );
 """)
 
-# Creating another table with all matches info for the leagues scraped
+# Creating another table with all matches info for the leagues added to the DB
 c.execute("""
     CREATE TABLE IF NOT EXISTS matches(
         league_id INT,
@@ -37,4 +40,8 @@ c.execute("""
             REFERENCES leagues(season_id)
     );
 """)
+
+# We will be extracting the ids for only the 5 major T20 leagues
+# IPL, BBL, CPL, PSL, T20 Blast
+
 
