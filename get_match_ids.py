@@ -43,19 +43,19 @@ c.execute("""
 
 # We will be extracting the ids for only the 5 major T20 leagues
 # IPL, BBL, CPL, PSL, T20 Blast
-
 rec_header = soup.find("ul", attrs={'id':'subnav_tier1'})
+leagues = ['IPL', 'BBL', 'CPL', 'PSL', 'Blast']
 
-ipl_div = rec_header.findAll('a', text=re.compile('IPL*'))[0].next_sibling.next_sibling
+for league in leagues:
+    lg_div = rec_header.findAll('a', text=re.compile(f'{league}*'))[0].next_sibling.next_sibling
 
-season_list = ipl_div.find_all('li', attrs={'class':'sub_nav_item'})[1:]
+    season_list = lg_div.find_all('li', attrs={'class':'sub_nav_item'})[1:]
 
-season_links = [item.findChild('a') for item in season_list]
+    season_links = [item.findChild('a') for item in season_list]
 
-season_years = [int(re.findall("[0-9]+", link['name'])[0]) for link in season_links]
-season_ids = [int(re.findall("[0-9]+", link['href'])[0]) for link in season_links]
+    season_years = [int(re.findall("[0-9]+", link['name'])[0]) for link in season_links]
+    season_ids = [int(re.findall("[0-9]+", link['href'])[0]) for link in season_links]
 
+    print(f"{league} = {len(season_ids)}")
 
-print(season_years)
-print(season_ids)
 
