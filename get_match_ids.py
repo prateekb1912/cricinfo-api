@@ -9,9 +9,9 @@ from utils import *
 
 # We will start with scraping only the franchisee-based T20 leagues and build on it.
 
-header = "https://stats.espncricinfo.com/"
+header = "https://stats.espncricinfo.com"
 
-addon = "ci/engine/records/index.html"
+addon = "/ci/engine/records/index.html"
 
 page = requests.get(header+addon)
 soup = BeautifulSoup(page.content, 'html.parser')
@@ -25,9 +25,10 @@ c = conn.cursor()
 # season - the season number of the league with the unique ID
 c.execute("""
     CREATE TABLE IF NOT EXISTS leagues(
-        season_id INT PRIMARY KEY,
+        season_id INT, 
         league_title TEXT,
-        season INT
+        season INT,
+        PRIMARY KEY(season_id)
     );
 """)
 
@@ -42,7 +43,7 @@ c.execute("""
 """)
 
 # We will be extracting the ids for only the 5 major T20 leagues
-# IPL, BBL, CPL, PSL, T20 Blast
+# # IPL, BBL, CPL, PSL, T20 Blast
 rec_header = soup.find("ul", attrs={'id':'subnav_tier1'})
 leagues = ['IPL', 'BBL', 'CPL', 'PSL', 'Blast']
 
@@ -58,11 +59,42 @@ for league in leagues:
 
     for idx in range(len(season_ids)):        
         c.execute('''
-            INSERT INTO leagues VALUES(?, ?, ?);''', 
+            INSERT INTO leagues VALUES(?, ?, ?)
+            ON CONFLICT DO NOTHING;''', 
             (season_ids[idx], league, season_years[idx]))
     
 conn.commit()
 
+c.execute("""SELECT season_id FROM leagues ORDER BY season""")
+
+IDs = [r[0] for r in c.fetchall()]
+
+
 # Now to extract the IDs for each match we will be adding to our DB
 
-match_page = 
+seas_res_urls = []
+
+for id in IDs:
+    REC_PAGE_URL = f"/ci/engine/series/{id}.html?view=records"
+
+    page = requests.get(header + REC_PAGE_URL)
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    res_link = soup.find('a', string = 'Match results')['href']
+
+    seas_res_urls.append({id: res_link})
+
+
+for ID in seas_res_urls:
+
+    page = requests.get(header + seas_res_urls[ID])
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    match_links = soup.find_all('a', string = 'T20')
+    match_ids = [[int(re.findall("[0-9]+", link['href'])[0]) for link in match_links]]
+
+    for idx in len(seas_res_urls[ID]):
+        c.execute('''
+            INSERT INTO matches VALUES (?,?)
+            ON CONFLICT DO NOTHING;''',
+            (ID, match_ids[idx]))
