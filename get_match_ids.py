@@ -56,6 +56,13 @@ for league in leagues:
     season_years = [int(re.findall("[0-9]+", link['name'])[0]) for link in season_links]
     season_ids = [int(re.findall("[0-9]+", link['href'])[0]) for link in season_links]
 
-    print(f"{league} = {len(season_ids)}")
+    for idx in range(len(season_ids)):        
+        c.execute('''
+            INSERT INTO leagues VALUES(?, ?, ?);''', 
+            (season_ids[idx], league, season_years[idx]))
+    
+conn.commit()
 
+# Now to extract the IDs for each match we will be adding to our DB
 
+match_page = 
