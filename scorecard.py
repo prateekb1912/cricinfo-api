@@ -6,6 +6,8 @@ import requests
 from utils import *
 from datetime import datetime
 
+series_id = 
+
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
 url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
@@ -119,7 +121,7 @@ for inn in innings:
     #     (det['player_id'], det['batter'], det['runs'], det['balls']))
 
 
-c.execute('''SELECT batter, runs, balls FROM batters WHERE (runs/balls) >= 1''')
+c.execute('''SELECT * FROM match_details''')
 results = c.fetchall()
 print(results)
 
