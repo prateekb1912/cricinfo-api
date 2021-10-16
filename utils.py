@@ -45,4 +45,28 @@ def get_league_id(league_title, season):
 
     res = cur.fetchall()[0][0]
 
+    cur.close()
+    conn.close()
+
     return res
+
+
+def get_all_matches_ids(tourn_id):
+    """
+        Returns a list of IDs for all the matches for a season
+        of which the season ID is passed as the parameter
+    """
+    conn = create_connection('leagues.db')
+    cur = conn.cursor()
+
+    print(tourn_id)
+
+    cur.execute("""
+        SELECT match_id FROM matches
+        WHERE league_id = ?""", (tourn_id,))
+    
+    res = cur.fetchall()
+
+    matches = [r[0] for r in res]
+
+    print(matches)

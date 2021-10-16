@@ -6,15 +6,16 @@ import requests
 from utils import *
 from datetime import datetime
 
-# Let's try to extract the match details of the 2009 season of IPL and
+# Let's try to extract all the match details for the 2009 season of IPL and
 # dump it into our database.
 
 tourn_id = get_league_id('IPL', 2009)
 
+matches_ids = get_all_matches_ids(tourn_id)
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
-url = f"https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
-    "?seriesId={tourn_id}&matchId=1254114"
+url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
+    f"?seriesId={tourn_id}&matchId=392239"
 
 # Create a connection to the database and a cursor object
 conn = create_connection('scorecard.db')
