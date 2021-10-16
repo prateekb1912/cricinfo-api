@@ -30,6 +30,19 @@ def create_connection(db_file):
 
     return conn
 
+def get_league_id(league_title, season):
+    """
+        Return the league_id for a specific season of any league
+        we want to get the details for.
+    """
 
-# The tournament IDs for several T20 leagues used by Cricinfo which
-# we will use to scrape data for the specific tournament season.
+    conn = create_connection('leagues.db')
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT season_id FROM leagues
+        WHERE league_title = ? AND season = ?""", (league_title, season))
+
+    res = cur.fetchall()[0][0]
+
+    return res

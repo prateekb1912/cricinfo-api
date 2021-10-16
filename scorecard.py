@@ -6,12 +6,15 @@ import requests
 from utils import *
 from datetime import datetime
 
-series_id = 313494
+# Let's try to extract the match details of the 2009 season of IPL and
+# dump it into our database.
+
+tourn_id = get_league_id('IPL', 2009)
 
 
 # We will use the 52nd match of the IPL 2021 (latest as of now) for sampling purposes
-url = "https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
-    "?seriesId=1249214&matchId=1254114"
+url = f"https://hs-consumer-api.espncricinfo.com/v1/pages/match/scorecard"\
+    "?seriesId={tourn_id}&matchId=1254114"
 
 # Create a connection to the database and a cursor object
 conn = create_connection('scorecard.db')
@@ -126,10 +129,3 @@ results = c.fetchall()
 print(results)
 
 conn.commit()    
-
-
-
-
-
-
-        
