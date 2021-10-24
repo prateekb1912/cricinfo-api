@@ -69,10 +69,9 @@ c.execute("""SELECT season_id FROM leagues ORDER BY season""")
 
 IDs = [r[0] for r in c.fetchall()]
 
-
 # Now to extract the IDs for each match we will be adding to our DB
 
-seas_res_urls = []
+seas_res_urls = dict()
 
 for id in IDs:
     REC_PAGE_URL = f"/ci/engine/series/{id}.html?view=records"
@@ -82,19 +81,19 @@ for id in IDs:
 
     res_link = soup.find('a', string = 'Match results')['href']
 
-    seas_res_urls.append({id: res_link})
+    seas_res_urls[id] = res_link
 
-
-for ID in seas_res_urls:
-
+for ID in IDs:
     page = requests.get(header + seas_res_urls[ID])
     soup = BeautifulSoup(page.content, 'html.parser')
 
     match_links = soup.find_all('a', string = 'T20')
-    match_ids = [[int(re.findall("[0-9]+", link['href'])[0]) for link in match_links]]
+    match_ids = [int(re.findall("[0-9]+", link['href'])[0]) for link in match_links]
 
-    for idx in len(seas_res_urls[ID]):
+    for idx in range(len(match_ids)):
         c.execute('''
             INSERT INTO matches VALUES (?,?)
             ON CONFLICT DO NOTHING;''',
             (ID, match_ids[idx]))
+
+conn.commit()
