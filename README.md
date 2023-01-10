@@ -1,2 +1,3 @@
 # cricinfo-crawler
-A Python-based web crawler to scrape the ESPNCricinfo website and collect all the necessary cricket stats and records
+
+A FastAPI-based project to serve important information regarding details for matches, tournaments, players, statistics which are all scraped from sites like Wikipedia, ESPNCricinfo, Cricbuzz, etc.
